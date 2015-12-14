@@ -1,6 +1,7 @@
 from random import randint
 from random import shuffle
 from random import choice
+from debug_log import log
 
 class Loto():
 	'''
@@ -167,9 +168,12 @@ for p in range( len(player) ):
 # PICK NUMBERS AND PLAY
 all_numbers = Loto.all_numbers[::]
 count = len(all_numbers)
-for picked_number in all_numbers:
+for j in range( len(all_numbers) ):
 	# Possibility to choose the picked number
 	cheat = input('Press Enter to pick a number, ' + str(count) + ' left')
+	if len(cheat) == 0:
+		picked_number = all_numbers.pop(0)
+
 	if cheat.isdigit():
 		picked_number = int(cheat)
 		all_numbers.remove(picked_number)
@@ -192,9 +196,12 @@ for picked_number in all_numbers:
 
 	print( spaces + 'The number is ' + str(picked_number) )
 
-	for p in range( len(players) ):
-		players_numbers = 0 # Variable for countimg players numbers to track who wins
+	for p in range( len(player) ): # Delete won players
+		if 0 in player: player.remove(0)
 
+	for p in range( len(player) ):
+		win_flag = False
+		players_numbers = 0 # Variable for countimg players numbers to track who wins
 		for c in range( len( players[ player[p] ] ) ):
 			current_card = players[ player[p] ][ card[c] ]
 			print( ' '*46 + player[p] + ' ' + card[c] )
@@ -210,7 +217,9 @@ for picked_number in all_numbers:
 
 			if current_card.numbers_left() == 0: players[ player[p] ].pop( card[c] ) # Remove empty card
 
-		if players_numbers == 0: # Remove player who has already won
-			print('*'*40 + player[p] + ' IS A WINNER ! ! !' + '*'*40)
-			players.pop( player[p] )
+		if players_numbers == 0: # Print that player won
+			print('\n'*3 + '*'*40 + player[p] + ' IS A WINNER ! ! !' + '*'*40 + '\n'*3)	
+			player[p] = 0 # Marked player who won
+
 	count -= 1
+	if count == 0 or len(player) == 0: print('The game is over'); exit()
