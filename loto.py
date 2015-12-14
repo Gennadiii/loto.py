@@ -169,6 +169,7 @@ for p in range( len(player) ):
 all_numbers = Loto.all_numbers[::]
 count = len(all_numbers)
 for j in range( len(all_numbers) ):
+	if count == 0 or len(player) == 0: print('The game is over'); exit()
 	# Possibility to choose the picked number
 	cheat = input('Press Enter to pick a number, ' + str(count) + ' left')
 	if len(cheat) == 0:
@@ -222,4 +223,3 @@ for j in range( len(all_numbers) ):
 			player[p] = 0 # Marked player who won
 
 	count -= 1
-	if count == 0 or len(player) == 0: print('The game is over'); exit()
