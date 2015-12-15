@@ -169,18 +169,19 @@ for p in range( len(player) ):
 all_numbers = Loto.all_numbers[::]
 count = len(all_numbers)
 for j in range( len(all_numbers) ):
-	if count == 0 or len(player) == 0: print('The game is over'); exit()
+	if not player or count == 0 or player == [0]: print('The game is over'); exit()
 	# Possibility to choose the picked number
 	cheat = input('Press Enter to pick a number, ' + str(count) + ' left')
-	if len(cheat) == 0:
-		picked_number = all_numbers.pop(0)
+	if len(cheat) == 0: picked_number = all_numbers.pop(0)
 
-	if cheat.isdigit():
+	elif cheat == 'get numbers': print(all_numbers); continue
+
+	elif cheat.isdigit():
 		picked_number = int(cheat)
 		all_numbers.remove(picked_number)
 
 	# Skip the number of numbers untill certain number of numbers is left in a card
-	if type(cheat) != int and cheat[:4] == 'skip':
+	elif type(cheat) != int and cheat[:4] == 'skip':
 		number_of_moves = int( cheat[ 5 : cheat.find('-') ] )
 		number_of_left_numbers = int( cheat[ cheat.find('-')+1 : ] )
 		stop = False
@@ -195,6 +196,8 @@ for j in range( len(all_numbers) ):
 			if stop: break
 		continue
 
+	else: print('Something\'s wrong, you already had this number. Don\'t cheat and pick again )'); continue
+
 	print( spaces + 'The number is ' + str(picked_number) )
 
 	for p in range( len(player) ): # Delete won players
@@ -205,6 +208,7 @@ for j in range( len(all_numbers) ):
 		players_numbers = 0 # Variable for countimg players numbers to track who wins
 		for c in range( len( players[ player[p] ] ) ):
 			current_card = players[ player[p] ][ card[c] ]
+			if current_card == 0: continue
 			print( ' '*46 + player[p] + ' ' + card[c] )
 			current_card.display()
 			input()
@@ -216,8 +220,7 @@ for j in range( len(all_numbers) ):
 
 			players_numbers += current_card.numbers_left()
 
-			if current_card.numbers_left() == 0: players[ player[p] ].pop( card[c] ) # Remove empty card
-
+			if current_card.numbers_left() == 0: players[ player[p] ][ card[c] ] = 0 # Change empty card object to 0
 		if players_numbers == 0: # Print that player won
 			print('\n'*3 + '*'*40 + player[p] + ' IS A WINNER ! ! !' + '*'*40 + '\n'*3)	
 			player[p] = 0 # Marked player who won
